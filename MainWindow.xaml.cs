@@ -1,10 +1,4 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="MainWindow.xaml.cs" company="Microsoft">
-//     Copyright (c) Microsoft Corporation.  All rights reserved.
-// </copyright>
-//------------------------------------------------------------------------------
-
-namespace Microsoft.Samples.Kinect.BodyBasics
+﻿namespace Microsoft.Samples.Kinect.BodyBasics
 {
 	using System;
 	using System.Collections.Generic;
@@ -17,119 +11,76 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 	using System.Windows.Media.Imaging;
 	using Microsoft.Kinect;
 
-	/// <summary>
-	/// Interaction logic for MainWindow
-	/// </summary>
+	// Interaction logic for MainWindow
 	public partial class MainWindow : Window, INotifyPropertyChanged
 	{
-		/// <summary>
-		/// Radius of drawn hand circles
-		/// </summary>
+		// Radius of drawn hand circles
 		private const double HandSize = 30;
 
-		/// <summary>
-		/// Thickness of drawn joint lines
-		/// </summary>
+		// Thickness of drawn joint lines
 		private const double JointThickness = 3;
 
-		/// <summary>
-		/// Thickness of clip edge rectangles
-		/// </summary>
+		// Thickness of clip edge rectangles
 		private const double ClipBoundsThickness = 10;
 
-		/// <summary>
-		/// Constant for clamping Z values of camera space points from being negative
-		/// </summary>
+		// Constant for clamping Z values of camera space points from being negative
 		private const float InferredZPositionClamp = 0.1f;
 
-		/// <summary>
-		/// Brush used for drawing hands that are currently tracked as closed
-		/// </summary>
+		// Brush used for drawing hands that are currently tracked as closed
 		private readonly Brush handClosedBrush = new SolidColorBrush( Color.FromArgb( 128, 255, 0, 0 ) );
 
-		/// <summary>
-		/// Brush used for drawing hands that are currently tracked as opened
-		/// </summary>
+		// Brush used for drawing hands that are currently tracked as opened
 		private readonly Brush handOpenBrush = new SolidColorBrush( Color.FromArgb( 128, 0, 255, 0 ) );
 
-		/// <summary>
-		/// Brush used for drawing hands that are currently tracked as in lasso (pointer) position
-		/// </summary>
+		// Brush used for drawing hands that are currently tracked as in lasso (pointer) position
 		private readonly Brush handLassoBrush = new SolidColorBrush( Color.FromArgb( 128, 0, 0, 255 ) );
 
-		/// <summary>
-		/// Brush used for drawing joints that are currently tracked
-		/// </summary>
+		// Brush used for drawing joints that are currently tracked
 		private readonly Brush trackedJointBrush = new SolidColorBrush( Color.FromArgb( 255, 68, 192, 68 ) );
 
-		/// <summary>
-		/// Brush used for drawing joints that are currently inferred
-		/// </summary>        
+		// Brush used for drawing joints that are currently inferred     
 		private readonly Brush inferredJointBrush = Brushes.Yellow;
 
-		/// <summary>
-		/// Pen used for drawing bones that are currently inferred
-		/// </summary>        
+		// Pen used for drawing bones that are currently inferred
 		private readonly Pen inferredBonePen = new Pen( Brushes.Gray, 1 );
 
-		/// <summary>
-		/// Drawing group for body rendering output
-		/// </summary>
+		// Drawing group for body rendering output
 		private DrawingGroup drawingGroup;
 
-		/// <summary>
-		/// Drawing image that we will display
-		/// </summary>
+		// Drawing image that we will display
 		private DrawingImage imageSource;
 
-		/// <summary>
-		/// Active Kinect sensor
-		/// </summary>
+		// Active Kinect sensor
 		private KinectSensor kinectSensor = null;
 
-		/// <summary>
-		/// Coordinate mapper to map one type of point to another
-		/// </summary>
+		// Coordinate mapper to map one type of point to another
 		private CoordinateMapper coordinateMapper = null;
 
-		/// <summary>
-		/// Reader for body frames
-		/// </summary>
+		// Reader for body frames
 		private BodyFrameReader bodyFrameReader = null;
 
-		/// <summary>
-		/// Array for the bodies
-		/// </summary>
+		// Array for the bodies
 		private Body[] bodies = null;
 
-		/// <summary>
-		/// definition of bones
-		/// </summary>
+		// definition of bones
 		private List<Tuple<JointType, JointType>> bones;
 
-		/// <summary>
-		/// Width of display (depth space)
-		/// </summary>
+		// Width of display (depth space)
 		private int displayWidth;
 
-		/// <summary>
-		/// Height of display (depth space)
-		/// </summary>
+		// Height of display (depth space)
 		private int displayHeight;
 
-		/// <summary>
-		/// List of colors for each body tracked
-		/// </summary>
+		// List of colors for each body tracked
 		private List<Pen> bodyColors;
 
-		/// <summary>
-		/// Current status text to display
-		/// </summary>
+		// Current status text to display
 		private string statusText = null;
 
-		/// <summary>
-		/// Initializes a new instance of the MainWindow class.
-		/// </summary>
+		// ジャンケン判定クラス
+		private Janken janken = new Janken();
+
+		// Initializes a new instance of the MainWindow class.
 		public MainWindow()
 		{
 			// one sensor is currently supported
@@ -218,14 +169,10 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 			this.InitializeComponent();
 		}
 
-		/// <summary>
-		/// INotifyPropertyChangedPropertyChanged event to allow window controls to bind to changeable data
-		/// </summary>
+		// INotifyPropertyChangedPropertyChanged event to allow window controls to bind to changeable data
 		public event PropertyChangedEventHandler PropertyChanged;
 
-		/// <summary>
-		/// Gets the bitmap to display
-		/// </summary>
+		// Gets the bitmap to display
 		public ImageSource ImageSource
 		{
 			get
@@ -234,9 +181,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 			}
 		}
 
-		/// <summary>
-		/// Gets or sets the current status text to display
-		/// </summary>
+		// Gets or sets the current status text to display
 		public string StatusText
 		{
 			get
@@ -257,11 +202,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 			}
 		}
 
-		/// <summary>
-		/// Execute start up tasks
-		/// </summary>
-		/// <param name="sender">object sending the event</param>
-		/// <param name="e">event arguments</param>
+		// Execute start up tasks
 		private void MainWindow_Loaded( object sender, RoutedEventArgs e )
 		{
 			if ( this.bodyFrameReader != null ) {
@@ -269,11 +210,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 			}
 		}
 
-		/// <summary>
-		/// Execute shutdown tasks
-		/// </summary>
-		/// <param name="sender">object sending the event</param>
-		/// <param name="e">event arguments</param>
+		// Execute shutdown tasks
 		private void MainWindow_Closing( object sender, CancelEventArgs e )
 		{
 			if ( this.bodyFrameReader != null ) {
@@ -288,11 +225,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 			}
 		}
 
-		/// <summary>
-		/// Handles the body frame data arriving from the sensor
-		/// </summary>
-		/// <param name="sender">object sending the event</param>
-		/// <param name="e">event arguments</param>
+		// Handles the body frame data arriving from the sensor
 		private void Reader_FrameArrived( object sender, BodyFrameArrivedEventArgs e )
 		{
 			bool dataReceived = false;
@@ -315,6 +248,12 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 				using ( DrawingContext dc = this.drawingGroup.Open() ) {
 					// Draw a transparent background to set the render size
 					dc.DrawRectangle( Brushes.Black, null, new Rect( 0.0, 0.0, this.displayWidth, this.displayHeight ) );
+
+					// ここからジャンケンの手の追加
+					janken.Reset();
+
+					// プレイヤー数
+					int players = 0;
 
 					int penIndex = 0;
 					foreach ( Body body in this.bodies ) {
@@ -342,10 +281,21 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 
 							this.DrawBody( joints, jointPoints, dc, drawPen );
 
+							// 左手
 							this.DrawHand( body.HandLeftState, jointPoints[JointType.HandLeft], dc );
+							janken.Add( body.HandLeftState );
+
+							// 右手
 							this.DrawHand( body.HandRightState, jointPoints[JointType.HandRight], dc );
+							janken.Add( body.HandRightState );
+
+							// プレイヤー数のカウントアップ
+							players++;
 						}
 					}
+
+					// ジャンケンを判定して結果を表示(プレーヤー数も表示)
+					this.StatusText = "プレイヤー数: " + players.ToString() + "人\n" + janken.Judge();
 
 					// prevent drawing outside of our render area
 					this.drawingGroup.ClipGeometry = new RectangleGeometry( new Rect( 0.0, 0.0, this.displayWidth, this.displayHeight ) );
@@ -353,13 +303,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 			}
 		}
 
-		/// <summary>
-		/// Draws a body
-		/// </summary>
-		/// <param name="joints">joints to draw</param>
-		/// <param name="jointPoints">translated positions of joints to draw</param>
-		/// <param name="drawingContext">drawing context to draw to</param>
-		/// <param name="drawingPen">specifies color to draw a specific body</param>
+		// Draws a body
 		private void DrawBody( IReadOnlyDictionary<JointType, Joint> joints, IDictionary<JointType, Point> jointPoints, DrawingContext drawingContext, Pen drawingPen )
 		{
 			// Draw the bones
@@ -385,15 +329,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 			}
 		}
 
-		/// <summary>
-		/// Draws one bone of a body (joint to joint)
-		/// </summary>
-		/// <param name="joints">joints to draw</param>
-		/// <param name="jointPoints">translated positions of joints to draw</param>
-		/// <param name="jointType0">first joint of bone to draw</param>
-		/// <param name="jointType1">second joint of bone to draw</param>
-		/// <param name="drawingContext">drawing context to draw to</param>
-		/// /// <param name="drawingPen">specifies color to draw a specific bone</param>
+		// Draws one bone of a body (joint to joint)
 		private void DrawBone( IReadOnlyDictionary<JointType, Joint> joints, IDictionary<JointType, Point> jointPoints, JointType jointType0, JointType jointType1, DrawingContext drawingContext, Pen drawingPen )
 		{
 			Joint joint0 = joints[jointType0];
@@ -414,12 +350,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 			drawingContext.DrawLine( drawPen, jointPoints[jointType0], jointPoints[jointType1] );
 		}
 
-		/// <summary>
-		/// Draws a hand symbol if the hand is tracked: red circle = closed, green circle = opened; blue circle = lasso
-		/// </summary>
-		/// <param name="handState">state of the hand</param>
-		/// <param name="handPosition">position of the hand</param>
-		/// <param name="drawingContext">drawing context to draw to</param>
+		// Draws a hand symbol if the hand is tracked: red circle = closed, green circle = opened; blue circle = lasso
 		private void DrawHand( HandState handState, Point handPosition, DrawingContext drawingContext )
 		{
 			switch ( handState ) {
@@ -437,11 +368,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 			}
 		}
 
-		/// <summary>
-		/// Draws indicators to show which edges are clipping body data
-		/// </summary>
-		/// <param name="body">body to draw clipping information for</param>
-		/// <param name="drawingContext">drawing context to draw to</param>
+		// Draws indicators to show which edges are clipping body data
 		private void DrawClippedEdges( Body body, DrawingContext drawingContext )
 		{
 			FrameEdges clippedEdges = body.ClippedEdges;
@@ -475,11 +402,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
 			}
 		}
 
-		/// <summary>
-		/// Handles the event which the sensor becomes unavailable (E.g. paused, closed, unplugged).
-		/// </summary>
-		/// <param name="sender">object sending the event</param>
-		/// <param name="e">event arguments</param>
+		// Handles the event which the sensor becomes unavailable (E.g. paused, closed, unplugged).
 		private void Sensor_IsAvailableChanged( object sender, IsAvailableChangedEventArgs e )
 		{
 			// on failure, set the status text

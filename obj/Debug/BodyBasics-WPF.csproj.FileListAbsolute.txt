@@ -1,1 +1,15 @@
 C:\Users\Foobar\OneDrive\ドキュメント\プログラム\C#\Report\bin\AnyCPU\Debug\BodyBasics-WPF.exe.config
+C:\Users\Foobar\OneDrive\ドキュメント\プログラム\C#\Report\bin\AnyCPU\Debug\BodyBasics-WPF.exe
+C:\Users\Foobar\OneDrive\ドキュメント\プログラム\C#\Report\bin\AnyCPU\Debug\BodyBasics-WPF.pdb
+C:\Users\Foobar\OneDrive\ドキュメント\プログラム\C#\Report\bin\AnyCPU\Debug\Microsoft.Kinect.dll
+C:\Users\Foobar\OneDrive\ドキュメント\プログラム\C#\Report\bin\AnyCPU\Debug\Microsoft.Kinect.xml
+C:\Users\Foobar\OneDrive\ドキュメント\プログラム\C#\Report\obj\Debug\BodyBasics-WPF.csprojResolveAssemblyReference.cache
+C:\Users\Foobar\OneDrive\ドキュメント\プログラム\C#\Report\obj\Debug\MainWindow.baml
+C:\Users\Foobar\OneDrive\ドキュメント\プログラム\C#\Report\obj\Debug\MainWindow.g.cs
+C:\Users\Foobar\OneDrive\ドキュメント\プログラム\C#\Report\obj\Debug\App.g.cs
+C:\Users\Foobar\OneDrive\ドキュメント\プログラム\C#\Report\obj\Debug\BodyBasics-WPF_MarkupCompile.cache
+C:\Users\Foobar\OneDrive\ドキュメント\プログラム\C#\Report\obj\Debug\BodyBasics-WPF.g.resources
+C:\Users\Foobar\OneDrive\ドキュメント\プログラム\C#\Report\obj\Debug\Microsoft.Samples.Kinect.BodyBasics.Properties.Resources.resources
+C:\Users\Foobar\OneDrive\ドキュメント\プログラム\C#\Report\obj\Debug\BodyBasics-WPF.csproj.GenerateResource.Cache
+C:\Users\Foobar\OneDrive\ドキュメント\プログラム\C#\Report\obj\Debug\BodyBasics-WPF.exe
+C:\Users\Foobar\OneDrive\ドキュメント\プログラム\C#\Report\obj\Debug\BodyBasics-WPF.pdb
